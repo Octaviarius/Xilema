@@ -2,6 +2,69 @@ import xilema.types as xt
 import xilema.utils as xu
 
 
+def calcCategoryMetric(dic1: dict, dic2: dict):
+    all_elems = set(dic1.keys()) | set(dic2.keys())
+    both_elems = set(dic1.keys()) & set(dic2.keys())
+
+    all_value = 0.0
+    both_value = 0.0
+
+    # calc value for all elements
+    all_value = all_elems.__len__()
+
+    # calc value for both elements
+    for e in both_elems:
+        e1 = dic1[e]
+        e2 = dic2[e]
+        if e1.weight <= e2.weight:
+            both_value = both_value + e1.weight / e2.weight
+        else:
+            both_value = both_value + e2.weight / e1.weight
+    return both_value / all_value
+
+
+def findBestDuals(persons: [xt.Character]):
+    p1_idx = 0
+
+    p1_best = None
+    p2_best = None
+    metric_max = 0.0
+
+    for p1 in persons:
+        p1_idx = p1_idx + 1
+
+        for p2 in persons[p1_idx:]:
+
+            if p1.sex == p2.sex:
+                continue
+
+            wish_vs_opport_metric1 = calcCategoryMetric(
+                p1.wish_dict, p2.opportunity_dict)
+            wish_vs_opport_metric2 = calcCategoryMetric(
+                p2.wish_dict, p1.opportunity_dict)
+
+            like_vs_unlike_metric1 = calcCategoryMetric(
+                p1.like_dict, p2.unlike_dict)
+            like_vs_unlike_metric2 = calcCategoryMetric(
+                p2.like_dict, p1.unlike_dict)
+
+            like_vs_like_metric = calcCategoryMetric(
+                p1.like_dict, p2.like_dict)
+            unlike_vs_unlike_metric = calcCategoryMetric(
+                p2.unlike_dict, p1.unlike_dict)
+
+            metric = (wish_vs_opport_metric1 + wish_vs_opport_metric2) - \
+                (like_vs_unlike_metric1 + like_vs_unlike_metric2) + \
+                (like_vs_like_metric + unlike_vs_unlike_metric)
+
+            if metric > metric_max:
+                p1_best = p1
+                p2_best = p2
+                metric_max = metric
+
+    return (p1_best, p2_best, metric_max)
+
+
 class Cluster:
     def __init__(self):
         self.wish_dict = {}
@@ -23,32 +86,6 @@ class Cluster:
                 elem.weight = elem.weight - v.weight
                 if abs(elem.weight) < 0.0001:
                     del dic_target[v.name]
-
-    def calcMetric(dic1: dict, dic2: dict):
-        all_elems = set(dic1.keys()) | set(dic2.keys())
-        both_elems = set(dic1.keys()) & set(dic2.keys())
-
-        all_value = 0.0
-        both_value = 0.0
-
-        # calc value for all elements
-        for e in all_elems:
-            e1 = dic1[e]
-            e2 = dic2[e]
-            if e1.weight <= e2.weight:
-                all_value = all_value + e1.weight / e2.weight
-            else:
-                all_value = all_value + e2.weight / e1.weight
-
-        # calc value for both elements
-        for e in both_elems:
-            e1 = dic1[e]
-            e2 = dic2[e]
-            if e1.weight <= e2.weight:
-                both_value = both_value + e1.weight / e2.weight
-            else:
-                both_value = both_value + e2.weight / e1.weight
-        return both_elems / all_elems
 
     def addCharacter(self, char: xt.Character):
         self.character_list.append(char)

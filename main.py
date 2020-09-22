@@ -14,6 +14,16 @@ if __name__ == "__main__":
     gen.setSurnames(xd.getSurnames())
     gen.setAges(range(18, 65))
 
-    persons = gen.generate(100)
+    gen.setWishes(xd.getWishlist())
+    gen.setOpportunities(xd.getWishlist())
+    gen.setLikes(xd.getLikelist())
+    gen.setUnlikes(xd.getLikelist())
+    gen.setRangeOfProperties(range(3, 10))
+
+    persons = gen.generate(1000)
 
     cluster = xc.Cluster()
+
+    best_duals = xc.findBestDuals(persons)
+
+    print(best_duals)
