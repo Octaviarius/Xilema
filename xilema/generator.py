@@ -12,7 +12,7 @@ class PersonGenerator:
         self.wishes = []
         self.opportunities = []
         self.likes = []
-        self.unlikes = []
+        self.hates = []
         self.props_range = range(1, 1)
         return
 
@@ -37,8 +37,8 @@ class PersonGenerator:
     def setLikes(self, likes: list):
         self.likes = likes
 
-    def setUnlikes(self, unlikes: list):
-        self.unlikes = unlikes
+    def setHates(self, hates: list):
+        self.hates = hates
 
     def setRangeOfProperties(self, props_range: range):
         self.props_range = props_range
@@ -71,8 +71,8 @@ class PersonGenerator:
 
             for i in range(random.choice(self.props_range)):
                 prop = xt.Property(random.choice(
-                    self.unlikes), random.choice(range(1, 3)))
-                pers.addUnlike(prop)
+                    self.hates), random.choice(range(1, 3)))
+                pers.addHate(prop)
 
             res.append(pers)
 

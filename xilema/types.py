@@ -12,7 +12,7 @@ class PropList(enum.Enum):
     Wish = 0
     Opportunity = 1
     Like = 2
-    Unlike = 3
+    Hate = 3
 
 
 class Property:
@@ -34,7 +34,7 @@ class Character:
         self.wish_dict = {}
         self.opportunity_dict = {}
         self.like_dict = {}
-        self.unlike_dict = {}
+        self.hate_dict = {}
 
     def __repr__(self):
         return '{name:%s, sur:%s, sex:%s, age:%i}' % (self.name, self.surname, self.sex, self.age)
@@ -55,8 +55,8 @@ class Character:
     def getLikeList(self):
         return self.like_dict.values()
 
-    def getUnlikeList(self):
-        return self.unlike_dict.values()
+    def getHateList(self):
+        return self.hate_dict.values()
 
     def addWish(self, wish: Property):
         for w in xu.listify(wish):
@@ -70,6 +70,6 @@ class Character:
         for l in xu.listify(like):
             self.like_dict.update({l.name: l})
 
-    def addUnlike(self, unlike: Property):
-        for u in xu.listify(unlike):
-            self.unlike_dict.update({u.name: u})
+    def addHate(self, hate: Property):
+        for u in xu.listify(hate):
+            self.hate_dict.update({u.name: u})
